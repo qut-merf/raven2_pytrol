@@ -196,7 +196,7 @@ void teleopIntoDS1(u_struct *us_t) {
 #endif
 
     const int graspmax = (M_PI / 2 * 1000);
-    int graspmin = (-10.0 * 1000.0 DEG2RAD);
+    const int graspmin = (-10.0 * 1000.0 DEG2RAD);
 
 #ifdef SCISSOR_RIGHT
     if (armserial == GREEN_ARM_SERIAL) graspmin = (-40.0 * 1000.0 DEG2RAD);
@@ -542,10 +542,10 @@ void publish_joints(robot_device *device0) {
   sensor_msgs::JointState joint_state;
   // update joint_state
   joint_state.header.stamp = ros::Time::now();
-  joint_state.name.resize(28);
-  joint_state.position.resize(28);
-  //    joint_state.name.resize(14);
-  //    joint_state.position.resize(14);
+  // joint_state.name.resize(28);
+  // joint_state.position.resize(28);
+  joint_state.name.resize(14);
+  joint_state.position.resize(14);
   int left, right;
   if (device0->mech[0].type == GOLD_ARM) {
     left = 0;
@@ -586,6 +586,7 @@ void publish_joints(robot_device *device0) {
   joint_state.name[13] = "grasper_joint_2_R";
   joint_state.position[13] = device0->mech[right].joint[7].jpos * -1 + offsets_r.grasp2_off;
 
+  /*
   //======================LEFT ARM===========================
 
   joint_state.name[14] = "shoulder_L2";
@@ -618,6 +619,7 @@ void publish_joints(robot_device *device0) {
   joint_state.position[26] = device0->mech[right].joint[6].jpos_d + offsets_r.grasp1_off;
   joint_state.name[27] = "grasper_joint_2_R2";
   joint_state.position[27] = device0->mech[right].joint[7].jpos_d * -1 + offsets_r.grasp2_off;
+  */
 
   // Publish the joint states
   joint_publisher.publish(joint_state);

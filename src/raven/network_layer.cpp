@@ -155,8 +155,9 @@ void *network_process(void *param1) {
   int uSize = sizeof(u_struct);
 
   sockaddr_in clientName;
-  int clientLength = sizeof(clientName);
-  int retval;
+#ifdef NET_SEND
+  int clientLength = sizeof(clientName)
+#endif
   static int k = 0;
   int logFile;
   struct timeval tv;
@@ -178,7 +179,7 @@ void *network_process(void *param1) {
   }
   gettimeofday(&tv, &tz);
   sprintf(logbuffer, "\n\nOpened log file at %s\n", ctime(&(tv.tv_sec)));
-  retval = write(logFile, logbuffer, strlen(logbuffer));
+  write(logFile, logbuffer, strlen(logbuffer));
 
   /////  open socket
   sock = initSock(port);
@@ -193,8 +194,9 @@ void *network_process(void *param1) {
   inet_aton(SERVER_ADDR, &clientName.sin_addr);
   clientName.sin_port = htons((u_short)atoi(port));
 
+#ifdef NET_SEND
   clientLength = sizeof(clientName);
-
+#endif
   ///// initialize data polling
   FD_ZERO(&mask);       // initialize a descriptor set fdset mask to the null set
   FD_SET(sock, &mask);  // add the descriptor sock in fdset mask
@@ -250,7 +252,7 @@ void *network_process(void *param1) {
       //                packet\n", ctime(&(tv.tv_sec)) );
       //                ROS_ERROR("%s Bad Checksum -> rejected packet\n",
       //                ctime(&(tv.tv_sec)) );
-      //                retval = write(logFile,logbuffer, strlen(logbuffer));
+      //                write(logFile,logbuffer, strlen(logbuffer));
       //
       //            }
       //            else
@@ -260,7 +262,7 @@ void *network_process(void *param1) {
         sprintf(logbuffer, "%s Zero sequence -> reflect packet\n", ctime(&(tv.tv_sec)));
         log_msg("%s Zero sequence -> reflect packet\n", ctime(&(tv.tv_sec)));
 
-        retval = write(logFile, logbuffer, strlen(logbuffer));
+        write(logFile, logbuffer, strlen(logbuffer));
 
       } 
       else if (u.sequence > seq + 1)  // Skipping sequence number (dropped)
@@ -270,7 +272,7 @@ void *network_process(void *param1) {
                 u.sequence - 1);
         ROS_ERROR("%s Skipped (dropped?) packets %d - %d\n", ctime(&(tv.tv_sec)), seq + 1,
                   u.sequence - 1);
-        retval = write(logFile, logbuffer, strlen(logbuffer));
+        write(logFile, logbuffer, strlen(logbuffer));
         seq = u.sequence;
 
         // TODO:: should this include a "receiveUserspace" call?
@@ -281,7 +283,7 @@ void *network_process(void *param1) {
         gettimeofday(&tv, &tz);
         sprintf(logbuffer, "%s Duplicated packet %d - %d\n", ctime(&(tv.tv_sec)), seq, u.sequence);
         ROS_ERROR("%s Duplicated packet %d - %d\n", ctime(&(tv.tv_sec)), seq, u.sequence);
-        retval = write(logFile, logbuffer, strlen(logbuffer));
+        write(logFile, logbuffer, strlen(logbuffer));
 
       }
 
@@ -301,14 +303,14 @@ void *network_process(void *param1) {
         log_msg("%s Sequence numbering reset from %d to %d\n", ctime(&(tv.tv_sec)), seq,
                 u.sequence);
         seq = u.sequence;
-        retval = write(logFile, logbuffer, strlen(logbuffer));
+        write(logFile, logbuffer, strlen(logbuffer));
       } 
       else 
       {
         gettimeofday(&tv, &tz);
         sprintf(logbuffer, "%s Out of sequence packet %d\n", ctime(&(tv.tv_sec)), seq);
         ROS_ERROR("%s Out of sequence packet %d\n", ctime(&(tv.tv_sec)), seq);
-        retval = write(logFile, logbuffer, strlen(logbuffer));
+        write(logFile, logbuffer, strlen(logbuffer));
       }
     }
 

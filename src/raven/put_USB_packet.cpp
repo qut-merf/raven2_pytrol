@@ -74,22 +74,30 @@ int putUSBPacket(int id, mechanism *mech) {
   }
 
   int i = 0;
+#ifndef simulator
   unsigned char buffer_out[MAX_OUT_LENGTH];
 
   buffer_out[0] = DAC;               // Type of USB packet
   buffer_out[1] = MAX_DOF_PER_MECH;  // Number of DAC channels
+#endif
 
   for (i = 0; i < MAX_DOF_PER_MECH; i++) {
     // Factor in offset since we are in midrange operation
     mech->joint[i].current_cmd += DAC_OFFSET;
 
+#ifndef simulator
     buffer_out[2 * i + 2] = (char)(mech->joint[i].current_cmd);
     buffer_out[2 * i + 3] = (char)(mech->joint[i].current_cmd >> 8);
+#endif
 
     // Remove offset
     mech->joint[i].current_cmd -= DAC_OFFSET;
+#ifdef simulator
+    mech->joint[i].mpos = mech->joint[i].mpos_d;
+#endif
   }
 
+#ifndef simulator
   // Set PortF outputs
   buffer_out[OUT_LENGTH - 1] = mech->outputs;
 
@@ -97,6 +105,7 @@ int putUSBPacket(int id, mechanism *mech) {
   if (usb_write(id, &buffer_out, OUT_LENGTH) != OUT_LENGTH) {
     return -USB_WRITE_ERROR;
   }
+#endif
 
   return 0;
 }

@@ -56,10 +56,12 @@ void stateMachine(device *device0, param_pass *currParams, param_pass *rcvdParam
 
   u_08 rlDesired;
   u_08 *rl = &(currParams->runlevel);
+#ifndef simulator
   int i;
   u_08 tmp;
+#endif
   rlDesired = 9;  // arbitrary large number
-
+#ifndef simulator
   // Checks runlevel of all mechanisms. Lowest runlevel is chosen.
   for (i = 0; i < NUM_MECH; i++) {
     tmp = (device0->mech[i].inputs & (PIN_PS0 | PIN_PS1)) >> 6;
@@ -67,7 +69,40 @@ void stateMachine(device *device0, param_pass *currParams, param_pass *rcvdParam
       rlDesired = tmp;
     }
   }
-
+#else
+  // We need to control the statemodel to meet the needs of raven_cartesian_space_command mode
+  if (*rl == RL_E_STOP) {
+    // set homing_mode (4) and this will push to cartesian_space_control (6)
+    currParams->robotControlMode = 4;
+    log_msg("A. Set control mode to %d", currParams->robotControlMode);
+    *rl = RL_INIT;
+    device0->runlevel = *rl;
+	currParams->sublevel = 2;
+    log_msg("A. Pushed to runlevel %d sublevel %d", *rl, currParams->sublevel);
+	return;
+  } else if (*rl == RL_INIT && currParams->sublevel == 2) {
+    *rl = RL_INIT;
+    device0->runlevel = *rl;
+	currParams->sublevel = SL_AUTO_INIT;
+    log_msg("B. Pushed to runlevel %d sublevel %d", *rl, currParams->sublevel);
+	return;
+  } else if (*rl == RL_INIT && currParams->sublevel == SL_AUTO_INIT) {
+    *rl = RL_PEDAL_UP;
+	currParams->sublevel = 0;
+    device0->runlevel = *rl;
+    log_msg("C. Pushed to runlevel %d sublevel %d", *rl, currParams->sublevel);
+	return;
+  } else if (*rl == RL_PEDAL_UP) {
+    *rl = RL_PEDAL_DN;
+	currParams->sublevel = 0;
+    device0->runlevel = *rl;
+    log_msg("D. Pushed to runlevel %d sublevel %d", *rl, currParams->sublevel);
+  	return;
+  } else if (*rl == RL_PEDAL_DN) {
+	return;
+  }
+#endif
+  
   // already in desired runlevel.  Exit.
   if (*rl == rlDesired) {
     return;

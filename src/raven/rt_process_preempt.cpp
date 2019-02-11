@@ -116,14 +116,17 @@ void sigTrap(int sig) {
  *     \ingroup Control
  */
 int initialize_rt_memory_pool() {
+  /* TODO(JL): Determine why malloc fails here and causes seg fault.
   int i, page_size;
   char *buffer;
+  */
 
   // Now lock all current and future pages from preventing of being paged
   if (mlockall(MCL_CURRENT | MCL_FUTURE)) {
     perror("mlockall failed:");
     return -1;
   }
+  /* TODO(JL): Determine why malloc fails here and causes seg fault.
   mallopt(M_TRIM_THRESHOLD, -1);  // Turn off malloc trimming.
   mallopt(M_MMAP_MAX, 0);         // Turn off mmap usage.
 
@@ -138,7 +141,7 @@ int initialize_rt_memory_pool() {
     buffer[i] = 0;
   }
   free(buffer);  // buffer is now released but mem is locked to process
-
+  */
   return 0;
 }
 
@@ -207,7 +210,9 @@ static void *rt_process(void *) {
       tsnorm(&t);
       sleeploops++;
     }
+    /* TODO(JL): Determine why sleeploops tends to return 2 rather than 1  
     if (sleeploops != 1) std::cout << "slplup" << sleeploops << std::endl;
+    */
 
     /// SLEEP until next timer shot
     clock_nanosleep(0, TIMER_ABSTIME, &t, NULL);

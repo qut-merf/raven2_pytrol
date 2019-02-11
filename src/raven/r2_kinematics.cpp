@@ -373,7 +373,7 @@ int r2_inv_kin(device *d0, int runlevel) {
     double sol_err;
     int check_result = 0;
     if ((check_result = check_solutions(lo_thetas, iksol, sol_idx, sol_err)) < 0) {
-      //			cout << "IK failed\n";
+      cout << "IK failed - no solution found!\n";
       return -1;
     }
 
@@ -622,59 +622,70 @@ int apply_joint_limits(double *Js, double *Js_sat) {
   if (Js[0] <= DOF_types[SHOULDER].min_limit) {
     Js_sat[0] = DOF_types[SHOULDER].min_limit;
     limited = 1;
+    std::cout << "shoulder value  = " << Js[0] << std::endl;
     std::cout << "shoulder min limit reached  = " << Js_sat[0] << std::endl;
   } else if (Js[0] >= DOF_types[SHOULDER].max_limit) {
     Js_sat[0] = DOF_types[SHOULDER].max_limit;
     limited = 1;
+    std::cout << "shoulder value  = " << Js[0] << std::endl;
     std::cout << "shoulder max limit reached  = " << Js_sat[0] << std::endl;
   }
 
   if (Js[1] <= DOF_types[ELBOW].min_limit) {
     Js_sat[1] = ELBOW_MIN_LIMIT;
     limited = 1;
+    std::cout << "elbow value  = " << Js[1] << std::endl;
     std::cout << "elbow min limit reached  = " << Js_sat[1] << std::endl;
   }
 
   else if (Js[1] >= DOF_types[ELBOW].max_limit) {
     Js_sat[1] = ELBOW_MAX_LIMIT;
     limited = 1;
+    std::cout << "elbow value  = " << Js[1] << std::endl;
     std::cout << "elbow max limit reached  = " << Js_sat[1] << std::endl;
   }
 
   if (Js[2] <= DOF_types[Z_INS].min_limit) {
     Js_sat[2] = DOF_types[Z_INS].min_limit;
     limited = 1;
+    std::cout << "z value  = " << Js[2] << std::endl;
     std::cout << "z min limit reached  = " << Js_sat[2] << std::endl;
   } else if (Js[2] >= DOF_types[Z_INS].max_limit) {
     Js_sat[2] = DOF_types[Z_INS].max_limit;
     limited = 1;
+    std::cout << "z value  = " << Js[2] << std::endl;
     std::cout << "z max limit reached  = " << Js_sat[2] << std::endl;
   }
 
   if (Js[3] <= DOF_types[TOOL_ROT].min_limit) {
     Js_sat[3] = DOF_types[TOOL_ROT].min_limit;
     limited = 1;
+    std::cout << "rot value  = " << Js[3] << std::endl;
     std::cout << "rot min limit reached  = " << Js_sat[3] << std::endl;
   }
 
   else if (Js[3] >= DOF_types[TOOL_ROT].max_limit) {
     Js_sat[3] = DOF_types[TOOL_ROT].max_limit;
     limited = 1;
+    std::cout << "rot value  = " << Js[3] << std::endl;
     std::cout << "rot max limit reached  = " << Js_sat[3] << std::endl;
   }
 
   if (Js[4] <= DOF_types[WRIST].min_limit) {
     Js_sat[4] = DOF_types[WRIST].min_limit;
     limited = 1;
+    std::cout << "wrist value  = " << Js[4] << std::endl;
     std::cout << "wrist min limit reached  = " << Js_sat[4] << std::endl;
   } else if (Js[4] >= DOF_types[WRIST].max_limit) {
     Js_sat[4] = DOF_types[WRIST].max_limit;
     limited = 1;
+    std::cout << "wrist value  = " << Js[4] << std::endl;
     std::cout << "wrist max limit reached  = " << Js_sat[4] << std::endl;
   }
   if (Js[5] <= DOF_types[GRASP1].min_limit) {
     Js_sat[5] = DOF_types[GRASP1].min_limit;
     limited = 1;
+    std::cout << "grasp1 value  = " << Js[5] << std::endl;
     std::cout << "grasp1 min limit reached  = " << Js_sat[5] << std::endl;
   }
 

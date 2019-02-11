@@ -181,8 +181,10 @@ void getStateLPF(DOF *joint, int tool_type) {
 // removed filter functionality - CIGIT 7/30/15
 // the filter was shown to cause fluttering in the tool joints after homing
 #ifdef NO_LPF
+#ifndef simulator
   joint->mvel = (motorPos - oldPos[0]) / STEP_PERIOD;
   joint->mpos = motorPos;
+#endif
 
   static int print_once = 0;
   if (print_once < 1) {

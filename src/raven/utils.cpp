@@ -242,6 +242,7 @@ int tools_ready(mechanism *mech) {
 *			0 otherwise
 */
 int robot_ready(robot_device *device0) {
+#ifndef simulator
   mechanism *_mech = NULL;
   DOF *_joint = NULL;
   int i, j;
@@ -249,6 +250,7 @@ int robot_ready(robot_device *device0) {
   while (loop_over_joints(device0, _mech, _joint, i, j)) {
     if (_joint->state != jstate_ready) return 0;
   }
+#endif
   return 1;
 }
 

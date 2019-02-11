@@ -140,6 +140,14 @@ int write_zeros_to_board(int boardid) {
 * \ingroup IO
 */
 int USBInit(device *device0) {
+#ifdef simulator
+  device0->mech[0].type = GOLD_ARM;
+  device0->mech[1].type = GREEN_ARM;
+  NUM_MECH = 2;
+  USBBoards.boards.push_back(GOLD_ARM_SERIAL);
+  USBBoards.boards.push_back(GREEN_ARM_SERIAL);
+  USBBoards.activeAtStart = 2;
+#else           
   // DELETEME    char buf[10]; //buffer to be used for clearing usb read buffers
   string boardStr;
   int boardid = 0;
@@ -231,7 +239,7 @@ int USBInit(device *device0) {
   // lets try to do it as # arms
   // JOINT_ENCODERS tag
   NUM_MECH = mechcounter;  // USBBoards.activeAtStart;
-
+#endif
   return USBBoards.activeAtStart;
 }
 

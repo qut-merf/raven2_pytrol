@@ -48,6 +48,7 @@ extern int NUM_MECH;
  */
 
 void initiateUSBGet(device *device0) {
+#ifndef simulator
   int i;
   int err = 0;
 
@@ -58,6 +59,7 @@ void initiateUSBGet(device *device0) {
       log_msg("Error (%d) initiating USB read %d on loop %d!", err, USBBoards.boards[i], gTime);
     }
   }
+#endif
 }
 
 /**\fn int getUSBPackets(device *device0)
@@ -70,6 +72,7 @@ void initiateUSBGet(device *device0) {
 
 int getUSBPackets(device *device0) {
   int ret = 0;
+#ifndef simulator
   int mech_index = 0;
 
   // Loop through all USB Boards
@@ -91,6 +94,7 @@ int getUSBPackets(device *device0) {
       ret = err;
     }
   }
+#endif
 
   return ret;
 }

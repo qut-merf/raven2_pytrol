@@ -1,0 +1,8 @@
+<launch>
+    <rosparam file="$(find raven_2)/params/r2params.yaml" command="load"/>
+    <node name ="r2_control" pkg="raven_2" type="r2_control" launch-prefix="xterm -e gdb --args" output="screen"/>
+    <arg name="model" default="$(find raven_2)/raven_visualization/ravenII_2arm.urdf" />
+    <param name="robot_description" textfile="$(arg model)" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find raven_2)/raven_visualization/raven_2.rviz" />
+</launch>

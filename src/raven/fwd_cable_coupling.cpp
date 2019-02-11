@@ -72,7 +72,7 @@ int fwdJointEncoders(device *device0) {
   int i = 0, j = 0;
   int enc_count_per_unit;
   int enc_val, enc_off;
-  static int twice = 0;
+  //static int twice = 0;
 
   // loop over joints, calculate only major axes with joint encoders
   while (loop_over_joints(device0, _mech, _joint, i, j)) {
