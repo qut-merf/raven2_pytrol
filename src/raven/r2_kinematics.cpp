@@ -365,6 +365,18 @@ int r2_inv_kin(device *d0, int runlevel) {
                         d0->mech[m].joint[Z_INS].jpos,    d0->mech[m].joint[TOOL_ROT].jpos,
                         d0->mech[m].joint[WRIST].jpos,    wrist2};
 
+  #ifdef simulator
+    log_msg("----- JOINTS -----");
+    log_msg("ARM: %d", arm);
+    log_msg("SHOULDER: %lf", joints[0]);
+    log_msg("ELBOW: %lf", joints[1]);
+    log_msg("Z_INS: %lf", joints[2]);
+    log_msg("TOOL_ROT: %lf", joints[3]);
+    log_msg("WRIST: %lf", joints[4]);
+    log_msg("WRIST2: %lf", joints[5]);
+    log_msg("------------------");
+  #endif
+
     // convert from joint angle representation to DH theta convention
     double lo_thetas[6];
 
