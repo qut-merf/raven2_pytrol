@@ -155,6 +155,9 @@ static void *rt_process(void *) {
   param_pass rcvdParams = {0};
   timespec t, tnow, t2, tbz;  // Tracks the timer value
   int interval = 1 * MS;      // task period in nanoseconds
+  #ifdef simulator
+  interval = 20 * MS;  // allow for running in VM environment
+  #endif
 
   // CPU locking doesn't help timing.  Oh well.
   // Lock thread to first available CPU

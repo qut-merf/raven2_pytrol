@@ -85,10 +85,12 @@ void updateAtmelOutputs(device *device0, int runlevel) {
  */
 void updateAtmelInputs(device device0, int runlevel) {
   // unsigned char inputs;
-  //int PLCState;
+  #ifndef simulator
+  int PLCState;
 
   // Update PLC State
-  //PLCState = (device0.mech[0].inputs & (PIN_PS0 | PIN_PS1)) >> 6;
+  PLCState = (device0.mech[0].inputs & (PIN_PS0 | PIN_PS1)) >> 6;
+  #endif
 
   //  printk("Mech0.inputs: %#x\n",device0.mech[0].inputs);
   //  static int j;

@@ -752,6 +752,29 @@ int check_solutions(double *in_thetas, ik_solution *iksol, int &out_idx, double 
   double eps = M_PI;
   int rollover = 0;
 
+#ifdef simulator
+  cout << "----- check_solutions debug -----" << endl;
+
+  // print out in_thetas array
+  for (int idx = 0; idx < 8; idx++) {
+    cout << "in_thetas[]," << in_thetas[idx] << endl;
+  }
+
+  // print out iksol array of ik_solution structs
+  for (int idx = 0; idx < 8; idx++) {
+    cout << "iksol[]";
+    cout << "," << iksol[idx].invalid;
+    cout << "," << iksol[idx].arm;
+    cout << "," << iksol[idx].th1;
+    cout << "," << iksol[idx].th2;
+    cout << "," << iksol[idx].d3;
+    cout << "," << iksol[idx].th4;
+    cout << "," << iksol[idx].th5;
+    cout << "," << iksol[idx].th6;
+    cout << endl;
+  }
+#endif
+
   for (int i = 0; i < 8; i++) {
     if (iksol[i].invalid == ik_invalid) {
       invalids++;
@@ -780,6 +803,12 @@ int check_solutions(double *in_thetas, ik_solution *iksol, int &out_idx, double 
     }
   }
 
+#ifdef simulator
+  cout << "minerr," << minerr << endl;
+  cout << "eps," << eps << endl;
+  if (minerr > eps) { cout << "minerr > eps,true" << endl; }
+#endif
+
   if (minerr > eps) {
     minidx = 9;
     minerr = 0;
@@ -801,11 +830,24 @@ int check_solutions(double *in_thetas, ik_solution *iksol, int &out_idx, double 
         //<<iksol[idx].th5*r2d << ",\t" <<iksol[idx].th6*r2d << ",\n";
       }
     }
+#ifdef simulator
+    cout << "return,-1" << endl;
+    cout << "---------------------------------" << endl;
+#endif
     return -1;
   }
 
   out_idx = minidx;
   out_err = minerr;
+
+#ifdef simulator
+  cout << "out_idx," << out_idx << endl;
+  cout << "out_err," << out_err << endl;
+  cout << "return," << rollover << endl;
+
+  cout << "---------------------------------" << endl;
+#endif
+
   return rollover;
 }
 

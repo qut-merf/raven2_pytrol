@@ -290,6 +290,9 @@ void *network_process(void *param1) {
       else if (u.sequence > seq)  // Valid packet
       {
         seq = u.sequence;
+#ifdef simulator
+        log_msg(">> Received sequence from user: %d <<", seq);
+#endif 
         receiveUserspace(&u, uSize);  // coordinates transform from ITP frame to robot 0 frame
       }
 
@@ -324,4 +327,5 @@ void *network_process(void *param1) {
 
   log_msg("Network socket is shutdown.");
   return (NULL);
-}  
+}
+
