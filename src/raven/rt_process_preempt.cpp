@@ -213,9 +213,8 @@ static void *rt_process(void *) {
       tsnorm(&t);
       sleeploops++;
     }
-    /* TODO(JL): Determine why sleeploops tends to return 2 rather than 1  
+
     if (sleeploops != 1) std::cout << "slplup" << sleeploops << std::endl;
-    */
 
     /// SLEEP until next timer shot
     clock_nanosleep(0, TIMER_ABSTIME, &t, NULL);
